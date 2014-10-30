@@ -13,6 +13,9 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +45,9 @@ public class UserService {
     @EJB
     private ConfigurationService configurationService;
 
+    @PersistenceContext(unitName = Constants.PERSISTENCE_UNIT)
+    private EntityManager em;
+
     /**
      * Tries to authenticate with given credentials
      *
@@ -53,20 +59,22 @@ public class UserService {
         User user = userDAO.findByLogin(login);
         if (user == null) {
             return null;
-        }
-        if (!passwordService.checkPassword(password, user.getPasswordSalt(), user.getPasswordHash())) {
-            user.setLoginAttempts(user.getLoginAttempts() + 1);
-            if (user.getLoginAttempts() >= configurationService.getInt(Constants.MAX_LOGIN_ATTEMPTS, Constants.MAX_LOGIN_ATTEMPTS_DEFALUT)) {
-                user.setStatus(UserStatus.LOCKED_OUT);
-            }
-            return null;
         } else {
-            user.setLoginAttempts(0);
-            if (user.getLastLogin() == null || System.currentTimeMillis() - user.getLastLogin().getTime() >
-                    configurationService.getLong(Constants.LAST_LOGIN_TIMEOUT, Constants.LAST_LOGIN_TIMEOUT_DEFAULT)) {
-                user.setLastLogin(timestampService.getTimestamp());
+            em.lock(user, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+            if (!passwordService.checkPassword(password, user.getPasswordSalt(), user.getPasswordHash())) {
+                user.setLoginAttempts(user.getLoginAttempts() + 1);
+                if (user.getLoginAttempts() >= configurationService.getInt(Constants.MAX_LOGIN_ATTEMPTS, Constants.MAX_LOGIN_ATTEMPTS_DEFALUT)) {
+                    user.setStatus(UserStatus.LOCKED_OUT);
+                }
+                return null;
+            } else {
+                user.setLoginAttempts(0);
+                if (user.getLastLogin() == null || System.currentTimeMillis() - user.getLastLogin().getTime() >
+                        configurationService.getLong(Constants.LAST_LOGIN_TIMEOUT, Constants.LAST_LOGIN_TIMEOUT_DEFAULT)) {
+                    user.setLastLogin(timestampService.getTimestamp());
+                }
+                return user;
             }
-            return user;
         }
     }
 
