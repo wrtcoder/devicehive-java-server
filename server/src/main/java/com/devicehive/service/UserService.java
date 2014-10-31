@@ -60,7 +60,7 @@ public class UserService {
         if (user == null) {
             return null;
         } else {
-            em.lock(user, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+            em.refresh(user, LockModeType.PESSIMISTIC_WRITE);
             if (!passwordService.checkPassword(password, user.getPasswordSalt(), user.getPasswordHash())) {
                 user.setLoginAttempts(user.getLoginAttempts() + 1);
                 if (user.getLoginAttempts() >= configurationService.getInt(Constants.MAX_LOGIN_ATTEMPTS, Constants.MAX_LOGIN_ATTEMPTS_DEFALUT)) {
