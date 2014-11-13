@@ -151,8 +151,8 @@ public class DeviceCommandDAO {
         }
         if (take == null) {
             take = DEFAULT_TAKE;
-            resultQuery.setMaxResults(take);
         }
+        resultQuery.setMaxResults(take);
         return resultQuery.getResultList();
 
     }
