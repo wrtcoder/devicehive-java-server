@@ -47,6 +47,13 @@ public class CommonHandlers extends WebsocketHandlers {
     @Autowired
     private WebSocketAuthenticationManager authenticationManager;
 
+    @Action("echo")
+    public WebSocketResponse processEcho(WebSocketSession session) {
+        WebSocketResponse response = new WebSocketResponse();
+        response.addValue("message", "hello", null);
+        return response;
+    }
+
     /**
      * Implementation of <a href="http://www.devicehive.com/restful#WsReference/Client/serverinfo">WebSocket API:
      * Client: server/info</a> Gets meta-information about the current API.
