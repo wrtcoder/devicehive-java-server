@@ -39,7 +39,7 @@ public class WebSocketActionAuthenticationAspect {
     @Pointcut("@annotation(com.devicehive.websockets.handlers.annotations.Action)")
     public void annotatedWithAction() {}
 
-//    @Before("publicHandlerMethod() && annotatedWithAction()")
+    @Before("publicHandlerMethod() && annotatedWithAction()")
     public void authenticate() throws Exception {
         WebSocketSession session = ThreadLocalVariablesKeeper.getSession();
         HiveWebsocketSessionState state = HiveWebsocketSessionState.get(session);

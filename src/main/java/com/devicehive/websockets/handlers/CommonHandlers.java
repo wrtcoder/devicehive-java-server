@@ -48,6 +48,7 @@ public class CommonHandlers extends WebsocketHandlers {
     private WebSocketAuthenticationManager authenticationManager;
 
     @Action("echo")
+    @PreAuthorize("hasRole('DEVICE')")
     public WebSocketResponse processEcho(WebSocketSession session) {
         WebSocketResponse response = new WebSocketResponse();
         response.addValue("message", "hello", null);
