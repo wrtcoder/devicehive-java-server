@@ -3,7 +3,7 @@ package com.devicehive.application.websocket;
 import com.devicehive.configuration.ConfigurationService;
 import com.devicehive.configuration.Constants;
 import com.devicehive.websockets.ClientWebSocketHandler;
-import com.devicehive.websockets.DeviceWebSocketHandler;
+import com.devicehive.websocket.DeviceWebSocketEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,17 +24,24 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(deviceHandler(), "/websocket/device").setAllowedOrigins("*")
-                .addHandler(clientHandler(), "/websocket/client").setAllowedOrigins("*");
+                .addHandler(clientHandler(), "/websocket/client").setAllowedOrigins("*")
+
+                .addHandler(deviceHandlerV2(), "/websocket/device/v2").setAllowedOrigins("*");
     }
 
     @Bean
     public WebSocketHandler deviceHandler() {
-        return new DeviceWebSocketHandler();
+        return new com.devicehive.websockets.DeviceWebSocketHandler();
     }
 
     @Bean
     public WebSocketHandler clientHandler() {
         return new ClientWebSocketHandler();
+    }
+
+    @Bean
+    public WebSocketHandler deviceHandlerV2() {
+        return new DeviceWebSocketEndpoint();
     }
 
     @Bean

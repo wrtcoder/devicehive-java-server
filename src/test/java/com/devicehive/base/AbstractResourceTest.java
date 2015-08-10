@@ -24,12 +24,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.CollectionUtils;
+import scala.concurrent.duration.Duration;
+import scala.concurrent.duration.FiniteDuration;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Base64;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,6 +51,8 @@ public abstract class AbstractResourceTest {
 
     public static final String DEVICE_ID = "E50D6085-2ABA-48E9-B1C3-73C673E414BE";
     public static final String DEVICE_KEY = "05F94BF509C8";
+
+    protected static final FiniteDuration NO_MSG_TIMEOUT = Duration.create(10, TimeUnit.MILLISECONDS);
 
     @Autowired
     private HazelcastInstance hzInstance;

@@ -12,7 +12,10 @@ import static com.devicehive.json.strategies.JsonPolicyDef.Policy.WEBSOCKET_SERV
 
 /**
  * Represents meta-information about the current API. For more details see <a href="http://www.devicehive.com/restful#Reference/ApiInfo">ApiInfo</a>
+ *
+ * @deprecated use {@link com.devicehive.json.domain.ApiInfo}
  */
+@Deprecated
 public class ApiInfo implements HiveEntity {
 
 

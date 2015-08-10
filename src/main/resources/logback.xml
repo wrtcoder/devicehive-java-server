@@ -58,6 +58,10 @@
         <appender-ref ref="ASYNC"/>
     </logger>
 
+    <logger name="com.devicehive.actors.peer" level="WARN" additivity="false">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
     <root level="WARN">
         <appender-ref ref="ASYNC"/>
     </root>

@@ -25,6 +25,7 @@ import java.util.Optional;
 import static com.devicehive.configuration.Constants.DEVICE_ID;
 import static com.devicehive.configuration.Constants.DEVICE_KEY;
 
+@Deprecated
 @Aspect
 @Component
 @Order(0)

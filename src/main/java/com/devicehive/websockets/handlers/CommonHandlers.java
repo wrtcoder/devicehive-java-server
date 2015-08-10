@@ -13,6 +13,8 @@ import com.devicehive.service.AccessKeyService;
 import com.devicehive.service.DeviceService;
 import com.devicehive.service.UserService;
 import com.devicehive.service.time.TimestampService;
+import com.devicehive.websocket.handler.common.AuthenticationRequestHandler;
+import com.devicehive.websocket.handler.common.ServerInfoRequestHandler;
 import com.devicehive.websockets.HiveWebsocketSessionState;
 import com.devicehive.websockets.converters.WebSocketResponse;
 import com.devicehive.websockets.handlers.annotations.Action;
@@ -29,6 +31,7 @@ import org.springframework.web.socket.WebSocketSession;
 import static com.devicehive.json.strategies.JsonPolicyDef.Policy.WEBSOCKET_SERVER_INFO;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
+@Deprecated
 @Component
 public class CommonHandlers extends WebsocketHandlers {
     private static final Logger logger = LoggerFactory.getLogger(CommonHandlers.class);
@@ -55,8 +58,10 @@ public class CommonHandlers extends WebsocketHandlers {
      * @return Json object with the following structure <code> { "action": {string}, "status": {string}, "requestId":
      *         {object}, "info": { "apiVersion": {string}, "serverTimestamp": {datetime}, "restServerUrl": {string} } }
      *         </code>
+     *
+     * @deprecated  'server/info' requests handled in {@link ServerInfoRequestHandler}
      */
-
+    @Deprecated
     @Action(value = "server/info")
     @PreAuthorize("permitAll")
     public WebSocketResponse processServerInfo(WebSocketSession session) {
@@ -78,6 +83,8 @@ public class CommonHandlers extends WebsocketHandlers {
      * @return JsonObject with structure <code> { "action": {string}, "status": {string}, "requestId": {object} }
      *         </code> Where: action - Action name: authenticate status - Operation execution status (success or error).
      *         requestId - Request unique identifier as specified in the request message.
+     *
+     * @deprecated 'authenticate' requests handled in {@link AuthenticationRequestHandler}
      */
     @Action(value = "authenticate")
     @PreAuthorize("permitAll")

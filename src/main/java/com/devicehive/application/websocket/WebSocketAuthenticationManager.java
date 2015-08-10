@@ -2,6 +2,7 @@ package com.devicehive.application.websocket;
 
 import com.devicehive.auth.HiveAuthentication;
 import com.devicehive.auth.rest.providers.DeviceAuthenticationToken;
+import com.devicehive.websocket.handler.common.AuthenticationRequestHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -17,6 +18,10 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @deprecated about to be replaced with {@link AuthenticationRequestHandler}
+ */
+@Deprecated
 @Component
 public class WebSocketAuthenticationManager {
 

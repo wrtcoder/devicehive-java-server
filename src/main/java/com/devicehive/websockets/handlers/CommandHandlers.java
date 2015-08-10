@@ -55,22 +55,6 @@ public class CommandHandlers extends WebsocketHandlers {
     @Autowired
     private SubscriptionSessionMap subscriptionSessionMap;
 
-    public static String createAccessDeniedForGuidsMessage(List<String> guids,
-                                                           List<Device> allowedDevices) {
-        Set<String> guidsWithDeniedAccess = new HashSet<>();
-        Set<String> allowedGuids = new HashSet<>(allowedDevices.size());
-        for (Device device : allowedDevices) {
-            allowedGuids.add(device.getGuid());
-        }
-        for (String deviceGuid : guids) {
-            if (!allowedGuids.contains(deviceGuid)) {
-                guidsWithDeniedAccess.add(deviceGuid);
-            }
-        }
-        return String.format(Messages.DEVICES_NOT_FOUND,
-                             StringUtils.join(guidsWithDeniedAccess.toArray(), ", "));
-    }
-
     @Action("command/subscribe")
     @PreAuthorize("hasAnyRole('CLIENT', 'ADMIN', 'DEVICE', 'KEY') and hasPermission(null, 'GET_DEVICE_COMMAND')")
     public WebSocketResponse processCommandSubscribe(@WsParam(TIMESTAMP) Date timestamp,
