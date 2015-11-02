@@ -19,6 +19,7 @@ import com.devicehive.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +73,9 @@ public class UserResourceImpl implements UserResource {
         User fetchedUser = null;
 
         if (currentLoggedInUser != null && currentLoggedInUser.getRole() == UserRole.ADMIN) {
-            fetchedUser =  userService.findUserWithNetworks(userId);
+            fetchedUser = userService.findUserWithNetworks(userId);
         } else if (currentLoggedInUser != null && currentLoggedInUser.getRole() == UserRole.CLIENT && Objects.equals(currentLoggedInUser.getId(), userId)) {
-            fetchedUser =  userService.findUserWithNetworks(currentLoggedInUser.getId());
+            fetchedUser = userService.findUserWithNetworks(currentLoggedInUser.getId());
         } else {
             return ResponseFactory.response(FORBIDDEN, new ErrorResponse(NOT_FOUND.getStatusCode(), Messages.USER_NOT_FOUND));
         }
@@ -158,7 +159,12 @@ public class UserResourceImpl implements UserResource {
      */
     @Override
     public Response assignNetwork(long id, long networkId) {
-        userService.assignNetwork(id, networkId);
+        try {
+            userService.assignNetwork(id, networkId);
+        } catch (DataAccessException e) {
+            logger.error("DataAccessException while assign network id : {} with user id : {}", networkId, id);
+            throw new HiveException(Messages.NO_ACCESS_TO_NETWORK, PRECONDITION_FAILED.getStatusCode());
+        }
         return ResponseFactory.response(NO_CONTENT);
     }
 
@@ -173,6 +179,7 @@ public class UserResourceImpl implements UserResource {
 
     /**
      * Finds current user from authentication context, handling key and basic authorisation schemes.
+     *
      * @return user object or null
      */
     private User findCurrentUserFromAuthContext() {
