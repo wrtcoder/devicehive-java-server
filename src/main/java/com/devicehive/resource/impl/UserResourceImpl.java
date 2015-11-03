@@ -173,7 +173,12 @@ public class UserResourceImpl implements UserResource {
      */
     @Override
     public Response unassignNetwork(long id, long networkId) {
-        userService.unassignNetwork(id, networkId);
+        try {
+            userService.unassignNetwork(id, networkId);
+        } catch (DataAccessException e) {
+            logger.error("DataAccessException while unassign network id : {} with user id : {}", networkId, id);
+            throw new HiveException(Messages.NO_ACCESS_TO_NETWORK, PRECONDITION_FAILED.getStatusCode());
+        }
         return ResponseFactory.response(NO_CONTENT);
     }
 
