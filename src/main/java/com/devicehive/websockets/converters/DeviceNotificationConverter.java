@@ -1,5 +1,6 @@
 package com.devicehive.websockets.converters;
 
+import com.devicehive.json.adapters.JsonStringWrapperAdapterFactory;
 import com.devicehive.json.adapters.TimestampAdapter;
 import com.devicehive.model.DeviceNotification;
 import com.google.gson.Gson;
@@ -17,7 +18,10 @@ import java.util.Date;
 public class DeviceNotificationConverter implements Encoder<DeviceNotification>, Decoder<DeviceNotification> {
     private Gson gson;
     public DeviceNotificationConverter(VerifiableProperties verifiableProperties) {
-        gson = new GsonBuilder().disableHtmlEscaping().registerTypeAdapter(Date.class, new TimestampAdapter()).create();
+        gson = new GsonBuilder().disableHtmlEscaping()
+                .registerTypeAdapterFactory(new JsonStringWrapperAdapterFactory())
+                .registerTypeAdapter(Date.class, new TimestampAdapter())
+                .create();
     }
 
     @Override
