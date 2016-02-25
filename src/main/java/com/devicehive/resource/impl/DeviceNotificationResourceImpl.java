@@ -18,6 +18,7 @@ import com.devicehive.resource.converters.TimestampQueryParamParser;
 import com.devicehive.resource.util.CommandResponseFilterAndSort;
 import com.devicehive.resource.util.ResponseFactory;
 import com.devicehive.resource.util.SimpleWaiter;
+import com.devicehive.service.DeviceActivityService;
 import com.devicehive.service.DeviceNotificationService;
 import com.devicehive.service.DeviceService;
 import com.devicehive.util.ParseUtil;
@@ -57,6 +58,8 @@ public class DeviceNotificationResourceImpl implements DeviceNotificationResourc
     @Autowired
     @Qualifier(DeviceHiveApplication.MESSAGE_EXECUTOR)
     private ExecutorService mes;
+    @Autowired
+    private DeviceActivityService deviceActivityService;
 
     /**
      * {@inheritDoc}
@@ -228,6 +231,8 @@ public class DeviceNotificationResourceImpl implements DeviceNotificationResourc
         }
         DeviceNotification message = notificationService.convertToMessage(notificationSubmit, device);
         notificationService.submitDeviceNotification(message, device);
+
+        deviceActivityService.update(guid);
 
         logger.debug("DeviceNotification insertAll proceed successfully");
         return ResponseFactory.response(CREATED, message, NOTIFICATION_TO_DEVICE);
