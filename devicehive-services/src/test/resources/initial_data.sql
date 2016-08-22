@@ -15,7 +15,7 @@ INSERT INTO configuration (name, value, entity_version) VALUES ('session.timeout
 INSERT INTO configuration (name, value, entity_version) VALUES ('allowNetworkAutoCreate', 'true', 0);
 
 -- 2. Default device classes
-INSERT INTO device_class (name, is_permanent, offline_timeout) VALUES ('Sample VirtualLed Device', FALSE, 600);
+INSERT INTO device_class (name, is_permanent, offline_timeout, entity_version) VALUES ('Sample VirtualLed Device', FALSE, 600, 1);
 
 -- 3. Default networks
 INSERT INTO network (name, description) VALUES ('VirtualLed Sample Network', 'A DeviceHive network for VirtualLed sample');
